@@ -160,9 +160,9 @@ def show_chatbot_page():
 def footer():
     st.markdown("---")
     st.markdown("### 🌐 Connect with us")
-    st.markdown("[LinkedIn]()")
-    st.markdown("[GitHub]()")
-    st.markdown("📧 Email: chetanvarmaatla@gmail.com")
+    st.markdown("[LinkedIn](www.linkedin.com/in/sanskruti-walli-95a683259)")
+    st.markdown("[GitHub](https://github.com/sanskrutiwalli-0323/-AI-Powered-Loan-Eligibility-Advisory-System)")
+    st.markdown("📧 Email: sanskrutiwalli@gmail.com")
 
 # Sidebar Layout Design Enhancement
 def sidebar_layout():
