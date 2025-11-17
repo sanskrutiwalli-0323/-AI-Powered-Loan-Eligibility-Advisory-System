@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore | AI Loan Predictor</title>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+    body { background: linear-gradient(135deg, #e8e6ff, #ffffff); color: #333; overflow-x: hidden; }
+
+    header {
+      background: rgba(150, 95, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px 50px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    header h2 { display: flex; align-items: center; gap: 10px; color: #6f42c1; font-size: 26px; font-weight: 700; }
+    nav a { display: inline-flex; align-items: center; gap: 8px; color: #6f42c1; text-decoration: none; margin-left: 25px; font-size: 18px; transition: 0.3s; }
+    nav a:hover { color: #b37aff; transform: scale(1.05); }
+
+    section { padding: 140px 50px 80px; }
+
+    /* WHAT WE DO */
+    #whatwedo {
+      text-align: center;
+      background: linear-gradient(120deg, #ffffff 50%, #f6f0ff 50%);
+      padding: 150px 50px;
+    }
+
+    #whatwedo h2 {
+      font-size: 38px;
+      color: #6f42c1;
+      margin-bottom: 60px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      width: 300px;
+      padding: 40px 25px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(111, 66, 193, 0.15);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(111, 66, 193, 0.25);
+    }
+
+    .card i {
+      color: #6f42c1;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      color: #6f42c1;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* SYSTEM ARCHITECTURE */
+    #architecture {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      background: linear-gradient(120deg, #f2eaff 50%, #ffffff 50%);
+      padding: 120px 50px;
+    }
+
+    .arch-text {
+      flex: 1;
+      max-width: 600px;
+      animation: slideInLeft 1.2s ease;
+    }
+
+    .arch-text h2 {
+      font-size: 38px;
+      color: #6f42c1;
+      margin-bottom: 25px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arch-text p {
+      font-size: 17px;
+      color: #444;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .arch-image {
+      flex: 1;
+      text-align: center;
+      animation: fadeIn 1.5s ease;
+    }
+
+    .arch-image img {
+      width: 85%;
+      max-width: 550px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease;
+    }
+
+    .arch-image img:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      background: #6f42c1;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes slideInLeft { from {opacity:0; transform:translateX(-50px);} to {opacity:1; transform:translateX(0);} }
+
+    @media (max-width: 768px) {
+      #architecture { flex-direction: column; text-align: center; }
+      .arch-image img { width: 90%; margin-top: 40px; }
+      .cards { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h2><i data-lucide="brain"></i> AI Loan Predictor</h2>
+    <nav>
+      <a href="{{ url_for('home') }}"><i data-lucide="home"></i> Home</a>
+      <a href="{{ url_for('check') }}"><i data-lucide="check-circle"></i> Check Eligibility</a>
+      <a href="{{ url_for('chatbot') }}"><i data-lucide="message-circle"></i> Chatbot</a>
+    </nav>
+  </header>
+
+  <!-- WHAT WE DO SECTION -->
+  <section id="whatwedo">
+    <h2>✨ What We Do</h2>
+    <div class="cards">
+      <div class="card">
+        <i data-lucide="cpu"></i>
+        <h3>AI-Driven Predictions</h3>
+        <p>We leverage advanced AI algorithms to deliver quick, data-driven loan eligibility predictions.</p>
+      </div>
+      <div class="card">
+        <i data-lucide="bar-chart-3"></i>
+        <h3>Data Intelligence</h3>
+        <p>Our system processes financial information securely to produce accurate and insightful results.</p>
+      </div>
+      <div class="card">
+        <i data-lucide="user-check"></i>
+        <h3>User-Centric Design</h3>
+        <p>We prioritize simplicity and user experience for faster, smarter decision-making.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM ARCHITECTURE SECTION -->
+  <section id="architecture">
+    <div class="arch-text">
+      <h2><i data-lucide="layers"></i> System Architecture</h2>
+      <p>The Loan Prediction System architecture efficiently collects user inputs, processes data, and delivers accurate predictions.</p>
+      <p><strong>Key Components:</strong></p>
+      <ul style="color:#444; line-height:1.8; font-size:16px;">
+        <li>🔹 User Interface — Captures financial details through an intuitive form.</li>
+        <li>🔹 Data Preprocessing — Transforms raw input into machine-readable format.</li>
+        <li>🔹 Machine Learning Model — Predicts approval probability with high precision.</li>
+        <li>🔹 Prediction Engine — Computes final decision based on trained algorithms.</li>
+        <li>🔹 Output Display — Returns easy-to-understand results instantly.</li>
+      </ul>
+    </div>
+
+    <div class="arch-image">
+      <img src="{{ url_for('static', filename='system_architecture.png') }}" alt="System Architecture Diagram" />
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 AI Loan Eligibility Predictor | Designed by Sanskruti Walli</p>
+  </footer>
+
+  <script> lucide.createIcons(); </script>
+</body>
+</html>

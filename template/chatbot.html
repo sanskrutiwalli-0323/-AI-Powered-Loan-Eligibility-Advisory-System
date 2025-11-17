@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chatbot</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8f5ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: rgba(150, 95, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px 50px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #6f42c1;
+    }
+
+    nav a {
+      color: #6f42c1;
+      text-decoration: none;
+      margin-left: 30px;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .chat-container {
+      width: 70%;
+      height: 500px;
+      background: white;
+      margin: 140px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .chat-box {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .bot-message {
+      padding: 12px;
+      background: #eadbff;
+      color: #4a2c92;
+      display: inline-block;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      max-width: 80%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bot-icon {
+      background:#6f42c1;
+      padding:7px;
+      border-radius:50%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #c9a6ff;
+      outline: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #6f42c1;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo"><i data-lucide="message-circle"></i> AI Chatbot</div>
+
+  <nav>
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('check') }}">Check Eligibility</a>
+    <a href="{{ url_for('chatbot') }}">Chatbot</a>
+  </nav>
+</header>
+
+<div class="chat-container">
+  <div class="chat-box" id="chatMessages">
+    <div class="bot-message">
+      <span class="bot-icon"><i data-lucide="bot"></i></span>
+      Hello! I'm your loan assistant. Ready to begin? (Yes/No)
+    </div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Type your answer..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  const chatBox = document.getElementById("chatMessages");
+  const userInput = document.getElementById("userInput");
+
+  const questions = [
+    "What is your gender? (Male/Female)",
+    "Are you married? (Yes/No)",
+    "Number of dependents? (0/1/2/3+)",
+    "Education? (Graduate/Not Graduate)",
+    "Are you self-employed? (Yes/No)",
+    "Applicant Income?",
+    "Coapplicant Income?",
+    "Requested Loan Amount?",
+    "Loan Term (days)?",
+    "Credit Score (300-850)?",
+    "Property Area? (Urban/Semiurban/Rural)"
+  ];
+
+  const questionKeys = [
+    "gender", "married", "dependents", "education", "employed",
+    "ApplicantIncome", "CoapplicantIncome", "LoanAmount",
+    "Loan_Amount_Term", "credit", "area"
+  ];
+
+  let step = -1;
+  let answers = {};
+  let started = false;
+
+  // Add bot message
+  function addBotMessage(text) {
+    chatBox.innerHTML += `
+      <div class="bot-message">
+        <span class="bot-icon"><i data-lucide="bot"></i></span> ${text}
+      </div>
+    `;
+    lucide.refresh();
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Add user message
+  function addUserMessage(text) {
+    chatBox.innerHTML += `
+      <div style="text-align:right; margin-bottom:10px;">
+        <span style="background:#c9a6ff; color:#fff; padding:10px; border-radius:8px; display:inline-block;">
+          ${text}
+        </span>
+      </div>
+    `;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Main function
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+
+    addUserMessage(text);
+    userInput.value = "";
+
+    // Start Chatbot
+    if (step === -1) {
+      if (text.toLowerCase() === "yes") {
+        started = true;
+        step = 0;
+        addBotMessage(questions[step]);
+      } else {
+        addBotMessage("Tell me whenever you're ready! Just type Yes.");
+      }
+      return;
+    }
+
+    // Store answer
+    answers[questionKeys[step]] = text;
+    step++;
+
+    // If questions remaining
+    if (step < questions.length) {
+      addBotMessage(questions[step]);
+    } else {
+      addBotMessage("Processing your loan eligibility...");
+
+      try {
+        const res = await fetch("/chatbot_response", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(answers)
+        });
+
+        const data = await res.json();
+
+        addBotMessage("📌 Result: " + data.result);
+
+      } catch (err) {
+        addBotMessage("❌ Error connecting to server.");
+      }
+    }
+  }
+
+  // Enter key support
+  userInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+</script>
+
+
+</body>
+</html>

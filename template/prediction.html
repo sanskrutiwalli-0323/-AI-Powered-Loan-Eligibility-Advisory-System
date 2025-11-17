@@ -1,22 +1,156 @@
 <!DOCTYPE html>
-<html lang ="en">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title> Loan Prediction Result</title>
-    <style>
-        body {font-family: Arial;background: #f7f7f7;text-align: center;padding: 50px;}
-        .result-box {background: white; padding: 30px;display: inline-block;border-radius: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.2)}
-        h1 { color: #007bff} 
-        p {font-size: 20px; color: #333;}
-        a { display: inline-block;margin-top: 15px;text-decoration: none;color: white;background: #007bff;padding: 10px 20px;border-radius: 6px;}
-        a:hover{background: #0056b3;}   
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loan Prediction Result</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f0ff, #ffffff);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 25px;
+      box-shadow: 0 10px 25px rgba(111, 66, 193, 0.2);
+      padding: 50px 60px;
+      text-align: center;
+      width: 600px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .container h1 {
+      font-size: 32px;
+      color: #6f42c1;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-icon {
+      width: 45px;
+      height: 45px;
+    }
+
+    .approved {
+      color: #00b894;
+    }
+
+    .rejected {
+      color: #e63946;
+    }
+
+    .msg {
+      font-size: 18px;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .section {
+      text-align: left;
+      background: #faf7ff;
+      border-radius: 15px;
+      padding: 20px 25px;
+      box-shadow: 0 3px 8px rgba(111, 66, 193, 0.1);
+      margin-top: 20px;
+    }
+
+    .section h3 {
+      color: #6f42c1;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .section ul {
+      list-style: none;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .section ul li::before {
+      content: "• ";
+      color: #6f42c1;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 25px;
+      background: #6f42c1;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #8f61ff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <div class="result-box">
-        <h1>Loan Eligibility Result</h1>
-        <p>{{ prediction_text}}</p>
-        <a href="/">Go Back</a>
-    </div>
+  <div class="container">
+    {% if "Yes" in prediction_text %}
+      <h1 class="approved"><i data-lucide="check-circle" class="status-icon"></i> Loan Approved!</h1>
+      <p class="msg">🎉 Congratulations! Your loan application is likely to be approved based on the provided information.</p>
+
+      <div class="section">
+        <h3>Key Highlights:</h3>
+        <ul>
+          <li>✓ Good credit history score</li>
+          <li>✓ Sufficient income to cover loan repayment</li>
+          <li>✓ Positive factors supporting approval</li>
+        </ul>
+      </div>
+
+    {% else %}
+      <h1 class="rejected"><i data-lucide="x-circle" class="status-icon"></i> Loan Rejected</h1>
+      <p class="msg">😞 Unfortunately, your loan application may be rejected based on the provided information.</p>
+
+      <div class="section">
+        <h3>Possible Reasons:</h3>
+        <ul>
+          <li>• Low credit history score</li>
+          <li>• Insufficient income for the loan amount</li>
+          <li>• High debt-to-income ratio</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h3>Suggestions:</h3>
+        <ul>
+          <li>→ Improve your credit score by paying off debts</li>
+          <li>→ Consider reducing your loan amount</li>
+          <li>→ Increase your income or add a co-applicant</li>
+        </ul>
+      </div>
+    {% endif %}
+
+    <a href="{{ url_for('home') }}" class="btn">← Back to Home</a>
+  </div>
+
+  <script>lucide.createIcons();</script>
 </body>
 </html>

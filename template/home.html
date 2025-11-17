@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Loan Eligibility Predictor</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+    body { background: linear-gradient(135deg, #e8e6ff, #ffffff); color: #333; overflow-x: hidden; }
+
+    header {
+      background: rgba(150, 95, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 20px 50px;
+      position: fixed; width: 100%; top: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 1000; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    header h2 { display: flex; align-items: center; gap: 10px; color: #6f42c1; font-size: 26px; font-weight: 700; }
+    nav a { display: inline-flex; align-items: center; gap: 8px; color: #6f42c1; text-decoration: none; margin-left: 25px; font-size: 18px; transition: 0.3s; }
+    nav a:hover { color: #b37aff; transform: scale(1.05); }
+
+    #home {
+      display: flex; align-items: center; justify-content: space-around;
+      min-height: 100vh; padding: 160px 50px 100px;
+      background: linear-gradient(120deg, #f2eaff 50%, #ffffff 50%);
+    }
+
+    .home-text { flex: 1; text-align: left; padding-right: 40px; animation: slideInLeft 1.2s ease; }
+
+    .typing-text {
+      font-size: 42px;  /* back to your original good size */
+      color: #6f42c1;
+      margin-bottom: 10px;
+      font-weight: 700;
+      border-right: 4px solid #6f42c1;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 3.5s steps(40, end) forwards, blink 0.8s infinite;
+    }
+
+    .subtitle {
+      font-size: 22px;
+      color: #7b55d9;
+      font-weight: 500;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeIn 2s ease 3.2s forwards;
+    }
+
+    .home-text p {
+      color: #555; font-size: 20px; margin-bottom: 30px;
+      opacity: 0; animation: fadeIn 2s ease 3.8s forwards;
+    }
+
+    .home-text .btn {
+      display: inline-block; padding: 12px 30px; background-color: #6f42c1; color: white;
+      border-radius: 30px; text-decoration: none; font-size: 18px;
+      transition: 0.3s ease; opacity: 0; animation: fadeIn 2s ease 4.5s forwards;
+    }
+    .home-text .btn:hover { background-color: #5426a3; transform: scale(1.05); }
+
+    .home-image { flex: 1; text-align: center; animation: fadeIn 2s ease; }
+    .home-image img { width: 85%; max-width: 550px; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    #about {
+      display: flex; align-items: center; justify-content: space-around; flex-wrap: nowrap;
+      background: linear-gradient(120deg, #ffffff 50%, #f6f0ff 50%);
+      padding: 120px 50px;
+    }
+
+    .about-image { flex: 1; text-align: center; }
+    .about-image img { width: 80%; max-width: 500px; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    .about-text { flex: 1; padding: 30px; text-align: left; animation: slideInRight 1s ease; }
+    .about-text h2 { font-size: 36px; color: #6f42c1; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .about-text p { font-size: 18px; color: #444; line-height: 1.8; }
+
+    #choose {
+      padding: 120px 50px;
+      background: linear-gradient(120deg, #f6f0ff 50%, #ffffff 50%);
+      text-align: center;
+    }
+
+    #choose h2 { font-size: 36px; color: #6f42c1; margin-bottom: 40px; font-weight: 700; }
+
+    .choose-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; }
+
+    .choose-card {
+      background: white; width: 300px; padding: 25px; border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .explore-btn {
+      margin-top: 40px; display: inline-block; padding: 12px 35px;
+      background: #6f42c1; color:white; border-radius: 30px;
+      text-decoration:none; font-size:18px; transition:0.3s;
+    }
+
+    footer { background: #6f42c1; color: white; text-align: center; padding: 15px; }
+
+    @keyframes typing { from { width:0 } to { width:100% } }
+    @keyframes blink { 50% { border-color: transparent } }
+    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2><i data-lucide="brain"></i> AI Loan Predictor</h2>
+  <nav>
+    <a href="#home"><i data-lucide="home"></i> Home</a>
+    <a href="#about"><i data-lucide="info"></i> About Us</a>
+    <a href="{{ url_for('check') }}"><i data-lucide="check-circle"></i> Check Eligibility</a>
+    <a href="{{ url_for('chatbot') }}"><i data-lucide="message-circle"></i> Chatbot</a>
+
+    <a href="{{ url_for('logout') }}" 
+     style="color: red; text-decoration: none; margin-left: 20px;">
+    <i data-lucide="log-out"></i> Logout
+    </a>
+
+  </nav>
+</header>
+
+<section id="home">
+  <div class="home-text">
+    <h1 class="typing-text">Welcome to AI Loan Eligibility Predictor</h1>
+    <p>Get instant loan approval predictions using advanced machine learning algorithms.<br>
+       Make informed financial decisions with confidence.</p>
+    <a href="{{ url_for('check') }}" class="btn">Check Eligibility Now</a>
+  </div>
+
+  <div class="home-image">
+    <img src="{{ url_for('static', filename='Loan_prediction_image.png') }}" alt="Loan Prediction" />
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-image">
+    <img src="{{ url_for('static', filename='about-us.png') }}" alt="About Us" />
+  </div>
+
+  <div class="about-text">
+    <h2><i data-lucide="users"></i> About Us</h2>
+    <p>
+      Our AI-Powered Loan Eligibility Predictor makes financial decision-making smooth and fast.
+      By analyzing your personal & financial information, our intelligent model predicts approval chances with accuracy.
+    </p>
+  </div>
+</section>
+
+<section id="choose">
+  <h2>✨ Why Choose Our Platform?</h2>
+
+  <div class="choose-container">
+    <div class="choose-card"><h3>✅ Fast & Accurate</h3><p>Instant prediction using trained ML models.</p></div>
+    <div class="choose-card"><h3>✅ Easy To Use</h3><p>Simple interface, no technical skills needed.</p></div>
+    <div class="choose-card"><h3>✅ Data Security</h3><p>Your information remains safe & protected.</p></div>
+  </div>
+
+  <a href="{{ url_for('explore') }}" class="explore-btn">Explore</a>
+</section>
+
+<footer>
+  <p>© 2025 AI Loan Eligibility Predictor | Designed by Sanskruti Walli</p>
+</footer>
+
+<script> lucide.createIcons(); </script>
+
+</body>
+</html>
